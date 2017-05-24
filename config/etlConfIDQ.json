@@ -1,0 +1,128 @@
+{
+	"readMasterFile": {
+		"filePath": "C:\\\\Users\\\\eib676\\\\Documents\\\\FS tech Innv\\\\20161129_Octon_combined_latest\\\\Octon\\\\input\\\\prevMaster1.csv",
+		"fileFormat": "csv",
+		"header": "true",
+		"inferSchema": "true"
+	},
+	"readDeltaFile": {
+		"filePath": "C:\\\\Users\\\\eib676\\\\Documents\\\\FS tech Innv\\\\20161129_Octon_combined_latest\\\\Octon\\\\input\\\\IDQ_deltaFile2.csv",
+		"fileFormat": "csv",
+		"header": "true",
+		"inferSchema": "true"
+	},
+	"filterMasterDF": {
+		"filterCond": "snap_end_dt = \"21001231\"",
+		"deSelect": "Y"
+	},
+	"masterMatchDF": {
+		"reformatCond": [
+			["", ""]
+		],
+		"selectDropCols": [
+			"drop",
+			"snap_dt",
+			"snap_end_dt"
+		]
+	},
+	"joinInMasterDF": {
+		"keys": ["data_qlty_data_obj_srgt_id"]
+	},
+	"joinInDeltaDF": {
+		"keys": ["data_qlty_data_obj_srgt_id"],
+		"joinType": "inner"
+	},
+	"activeInMasterDFReplOut": {
+		"keys": ["data_qlty_data_obj_srgt_id"]
+	},
+	"noChangeMasterDF": {
+		"keys": ["data_qlty_data_obj_srgt_id"],
+		"joinType": "inner"
+	},
+	"masterMatchOldDF": {
+		"keys": ["data_qlty_data_obj_srgt_id"],
+		"joinType": "inner"
+	},	
+	"masterMatchOldChangeDF": { 			
+		"reformatCond":			
+		[
+			["cast(\"20172205\" as String)", "snap_end_dt"]
+		],
+		"selectDropCols": [
+			"select"
+
+		]
+	},
+	"newDF": {
+		"reformatCond": [
+			["cast(\"20172205\" as String)", "snap_dt"],
+			["cast(\"21001231\" as Int)", "snap_end_dt"]
+		],
+		"selectDropCols": [
+			"select"
+		]
+	},
+	"deltaUpdateDF": {
+		"reformatCond": [
+			["cast(\"20172205\" as String)", "snap_dt"],
+			["cast(\"21001231\" as String)", "snap_end_dt"]
+		],
+		"selectDropCols": [
+			"select"
+
+		]
+	},
+	"masterOldDF": {
+		"reformatCond": [
+			["cast(\"20172205\" as String)", "snap_dt"],
+			["cast(\"20172205\" as String)", "snap_end_dt"]
+		],
+		"selectDropCols": ["select"]
+	},
+	"writeCurrDF": {
+		"filePath": "C:\\\\Users\\\\eib676\\\\Documents\\\\FS tech Innv\\\\20161129_Octon_combined_latest\\\\Octon\\\\input\\\\IDQ_prev_master_file_6.csv",
+		"fileFormat": "csv",
+		"header": "true",
+		"delimiter": ","
+	},
+	"deDupInDF": {
+		"deDupCols": ["data_obj_id"],
+		"keep": "",
+		"captureDuplicates": "Y",
+		"abort": "N"
+	},
+	"sortInDF": {
+		"sortCond": [
+			["asc", "data_obj_id"],
+			["desc", "data_obj_nm"]
+		]
+	},
+
+	"reformatInDF": {
+		"reformatCond": [
+			[
+				"262",
+				"sor_id_new"
+			]
+		],
+		"selectDropCols": [
+			"select",
+			"data_obj_id",
+			"data_obj_nm",
+			"data_obj_path",
+			"data_obj_proj_nm",
+			"data_obj_cret_dt",
+			"data_obj_cret_user_id",
+			"data_obj_mod_dt",
+			"data_obj_mod_user_id"
+		]
+	},
+
+	"joinInDF1": {
+		"keys": ["columnA"],
+		"joinType": "inner"
+	},
+	"joinInDF2": {
+		"keys": ["columnA"]
+	}
+}
