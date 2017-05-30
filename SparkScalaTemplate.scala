@@ -1,5 +1,3 @@
-package org.capone.etlsparkscala
-
 import EtlFunc._
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.sql.SparkSession
