@@ -1,0 +1,11 @@
+{
+  "readIDQMasterFile": ["readMasterFile", "read", "filterMasterDF",{
+	"filePath": "C:\\tmp\\input.txt",
+	"fileFormat": "csv",
+	"header": "true",
+	"inferSchema": "true"
+}],
+  "filterIDQMasterFile": ["filterMasterDF", "filter", ["activeInMasterDF", "InActiveMasterDF"],{
+	"filterCond": "name = \"siva\"",
+	"deSelect": "Y"
+}]}
