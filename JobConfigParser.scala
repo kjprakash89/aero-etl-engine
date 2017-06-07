@@ -101,31 +101,50 @@ object JobConfigParser extends App {
         case ("insert", opts) => {
           opts.foreach { x =>
             inCols.insert(Integer.parseInt(x("index")),
-            x("function") match {
-              case "currentDate" => {
-                val zone = x.getOrElse("zone", "UTC")
-                val format = x.getOrElse("format", "yyyyMMddHHmmss")
-                val col = x("name")
-                if ("UTC".equals(zone))
-                  s"""date_format(current_timestamp,"$format") as $col"""
-                else
-                  s"""date_format(from_utc_timestamp(current_timestamp,"$zone"),"$format") as $col"""
-              }
-              case "default" => {
-                val zone = x.getOrElse("zone", "UTC")
-                val value = x.getOrElse("value", "")
-                val col = x("name")
-                s""""$value" as $col"""
-              }
-            })
+              x("function") match {
+                case "currentDate" => {
+                  val zone = x.getOrElse("zone", "UTC")
+                  val format = x.getOrElse("format", "yyyyMMddHHmmss")
+                  val col = x("name")
+                  if ("UTC".equals(zone))
+                    s"""date_format(current_timestamp,"$format") as $col"""
+                  else
+                    s"""date_format(from_utc_timestamp(current_timestamp,"$zone"),"$format") as $col"""
+                }
+                case "default" => {
+                  val value = x.getOrElse("value", "")
+                  val col = x("name")
+                  s""""$value" as $col"""
+                }
+              })
           }
         }
-        case ("transform", opts) => println("transform" + opts)
+        case ("transform", opts) => {
+
+          opts.foreach { x =>
+            inCols.insert(Integer.parseInt(x("index")),
+              x("function") match {
+                case "rename" => {
+                  val from = x("from")
+                  val to = x("to")
+                  s""" $from as $to"""
+                }
+                case "substring" => {
+                  val from = x("from")
+                  val to = x("to")
+                  val position = x("position")
+                  val length = x("length")
+                  s""" substring($from,$position,$length) as $to"""
+                }
+              })
+          }
+
+        }
         case x => println("nothing matched " + x)
       }
     }
     inCols.foreach(println)
-    inputDF.selectExpr(inCols:_*).drop(options("drop").asInstanceOf[List[String]]: _*)
+    inputDF.selectExpr(inCols: _*).drop(options("drop").asInstanceOf[List[String]]: _*)
     //spark.emptyDataFrame
   }
 
