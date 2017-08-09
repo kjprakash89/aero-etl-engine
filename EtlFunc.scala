@@ -1,3 +1,5 @@
+package aero.core
+
 import org.apache.spark.sql.{Encoder, Dataset, DataFrame, Row}
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
