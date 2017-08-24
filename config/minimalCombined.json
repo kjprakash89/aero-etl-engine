@@ -1,0 +1,32 @@
+{
+  "readIDQMasterFile": ["readMasterFile", "read", "filterMasterDF",{
+	"filePath": "C:\\tmp\\input.txt",
+	"fileFormat": "csv",
+	"header": "true",
+	"inferSchema": "true"
+}],
+  "readIDQJoinFile": ["readMasterFile", "read", "filterMasterDF1",{
+	"filePath": "C:\\tmp\\input1.txt",
+	"fileFormat": "csv",
+	"header": "true",
+	"inferSchema": "true"
+}],
+  "joinMasterDelta": [["filterMasterDF","filterMasterDF1"], "join", ["_", "newDF", "oldDF", "deltaMatchDF", "masterMatchDF"],{
+	"keys": ["id"],
+	"joinType": "inner"
+}],
+  "filterIDQMasterFile": ["deltaMatchDF", "filter", ["activeInMasterDF", "InActiveMasterDF"],{
+	"filterCond": "name = \"siva\"",
+	"deSelect": "Y"
+}],
+"unapplyfilter":[["InActiveMasterDF","activeInMasterDF"], "union", "writeCurrDF"],
+"diff": [["writeCurrDF", "activeInMasterDF"], "diff", ["deltaUpdateDF", "masterMatchOldDF", "noChangeMasterDF"]],
+"updateSnapDtdeltaUpdateDF":["deltaUpdateDF", "reformat", "masterMatchOldFormattedDF" ,{
+	"drop": ["id"],
+	"insert": [{"name":"date","function":"currentDate","format":"YYYYMMDD HH:MM:SS","zone":"UTC","index":"1"},
+				{"name":"SOR_ID","function":"default","value":"6","index":"3"}
+	],
+	"transform": [{"from":"name","to":"nameRename","function":"rename","index":"0"},{"from":"name","to":"nameSub","function":"substring","position":"0","length":"1","index":"4"}
+	]
+}]
+}

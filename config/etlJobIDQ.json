@@ -1,0 +1,16 @@
+{
+      "readIDQMasterFile": ["readMasterFile", "read", "filterMasterDF"],
+	  "readIDQDeltaFile": ["readDeltaFile", "read", "joinInDeltaDF"],
+	  "filterIDQMasterFile": ["filterMasterDF", "filter", ["activeInMasterDF", "InActiveMasterDF"]],
+	  "replicateInMaster": ["activeInMasterDF" , "replicate", ["joinInMasterDF","activeInMasterDFReplOut"]],      	  	  
+	  "joinMasterDelta": [["joinInDeltaDF","joinInMasterDF"], "join", ["_", "newDF", "oldDF", "deltaMatchDF", "masterMatchDF"]],
+	  "rfmtDropSnapdt": ["masterMatchDF", "reformat", "diffInMasterDF"],	
+	  "diff": [["deltaMatchDF", "diffInMasterDF"], "diff", ["deltaUpdateDF", "masterMatchOldDF", "noChangeMasterDF"]],	  
+	  "updateSnapDtnewDF":["newDF", "reformat", "unionInNewDF" ],
+	  "updateSnapDtdeltaUpdateDF":["deltaUpdateDF", "reformat", "unionInDeltaUpdateDF" ],
+	  "updateSnapmasterMatchDF":[["masterMatchOldDF","activeInMasterDFReplOut"], "join", ["_", "_", "_", "_", "masterMatchOldChangeDF"]],
+	  "updateSnapDtoldDF":["masterMatchOldChangeDF", "reformat", "unionMasterMatchOldChangeDF" ],
+	  "populateSnapDt":[["noChangeMasterDF", "activeInMasterDFReplOut"], "join", ["_", "_", "_", "_", "masterMatchNoChangeDF"]],
+	  "unionall":[["InActiveMasterDF", "oldDF","unionInNewDF", "unionInDeltaUpdateDF", "unionMasterMatchOldChangeDF","masterMatchNoChangeDF"], "union", "writeCurrDF"],
+      "writeCurrentdayMasterFile": ["writeCurrDF", "write", "WriteFile1"]
+    }
