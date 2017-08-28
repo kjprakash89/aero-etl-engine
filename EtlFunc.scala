@@ -48,7 +48,7 @@ object EtlFunc {
       case "jdbc" => {
         if (config("predicates") != null)
           ss.read.jdbc(config("url"), config("table"), config("predicates").split(","), prepareCxnProps(config)) //url, table, properties)
-        else if (config("predicates") != null)
+        else if (config("columnName") != null)
           ss.read.jdbc(config("url"), config("table"), config("columnName"),config("lowerBound").toLong, config("upperBound").toLong,config("numPartitions").toInt, prepareCxnProps(config)) //url, table, properties)
         else
           ss.read.jdbc(config("url"), config("table"), prepareCxnProps(config)) 
